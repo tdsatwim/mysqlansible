@@ -1,0 +1,19 @@
+- name: get root temp password
+  shell: "grep 'temporary password' /var/log/mysqld.log | tail -n 1 | awk '{print $(NF)}'"
+  register: mysql_temp_password 
+  failed_when: mysql_temp_password.stdout == "" 
+  changed_when: false
+ 
+- name: Display root password
+  debug:
+    msg: "Temporary MySQL password: {{ mysql_temp_password.stdout }}"
+
+- name: update expired root user password
+  command: >
+    mysql --user=root --password='{{ mysql_temp_password.stdout }}' 
+    --connect-expired-password
+    --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  changed_when: true
+
+
+
