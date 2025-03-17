@@ -1,0 +1,16 @@
+- name: Copy MySQL config
+  template:
+    src: my.cnf.j2
+    dest: "/etc/my.cnf"
+  notify: Restart MySQL
+
+- name: Allow MySQL in firewall
+  firewalld:
+    service: mysql
+    permanent: yes
+    state: enabled
+  when: ansible_os_family == "RedHat"
+
+- name: Set SELinux context for MySQL
+  command: semanage fcontext -a -t mysqld_db_t "/var/lib/mysql(/.*)?"
+  ignore_errors: yes

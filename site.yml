@@ -1,0 +1,11 @@
+- name: Install and configure MySQL
+  hosts: mysql_servers
+  become: yes
+  roles:
+    - mysql
+
+- name: Setup MySQL backups
+  hosts: backup
+  become: yes
+  roles:
+    - mysql
