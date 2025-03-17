@@ -1,26 +1,16 @@
-- name: Ensure requirded dependencies are installed
-  dnf:
-    name:
-      - libaio
-      - libsemanage
-      - policycoreutils
-      - python3-policycoreutils
-      - python3-PyMySQL
-    state: present
-
-- name: Copy MySQL RPM Bundle to target machine
-  copy:
-    src: "{{ mysql_rpm_bundle }}"
-    dest: "/tmp/mysql-9.1.0-1.el9.x86_64.rpm-bundle.tar"
-    mode: '0644'
-
-- name: Extract MySQL RPM Bundle
-  command: "tar -xvf /tmp/mysql-9.1.0-1.el9.x86_64.rpm-bundle.tar -C /tmp"
-  args:
-    creates: "/tmp/mysql-community-server-9.1.0-1.el9.x86_64.rpm"
-
-- name: Install MySQL 
-  yum: 
-    name: "/tmp/mysql-community-*.rpm"
+- name: Install MySQL repository
+  yum:
+    name: https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
     state: present
     disable_gpg_check: true
+
+- name: Install MySQL Server
+  yum:
+    name: mysql-community-server
+    state: present
+
+- name: Ensure MySQL service is enabled and running
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
