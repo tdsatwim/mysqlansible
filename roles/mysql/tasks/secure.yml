@@ -1,0 +1,17 @@
+- name: Get temporary MySQL root password
+  shell: "grep 'temporary password' /var/log/mysqld.log | tail -1 | awk '{print $(NF)}'"
+  register: mysql_temp_password
+  retries: 5
+  delay: 3
+  until: mysql_temp_password.stdout != ""
+
+- name: Change root password
+  community.mysql.mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_user: root
+    login_password: "{{ mysql_temp_password.stdout }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+
+

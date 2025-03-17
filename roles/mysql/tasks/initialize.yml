@@ -1,0 +1,4 @@
+- name: Initialize MySQL data directory
+  command: mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql
+  args:
+    creates: /var/lib/mysql/mysql
