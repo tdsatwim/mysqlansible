@@ -1,30 +1,15 @@
 - name: Create MySQL database
-  mysql_db:
-     name: my_database
-     state: present 
-     login_user: root
-     login_password: "{{ mysql_root_password }}"
-     login_host: "localhost"
+  community.mysql.mysql_db:
+    name: my_database
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
 
-- name: create mysql user
-  mysql_user:
+- name: Create MySQL user
+  community.mysql.mysql_user:
     name: myuser
-    password: mypassword
-    priv: "my_database.* : ALL"
+    password: "mypassword"
+    priv: "my_database.*:ALL"
     host: "%"
     state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-    login_host: "localhost"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     plugin: mysql_native_password
-
-- name: Grant privileges to MySQL user
-  mysql_user:
-    name: myuser
-    priv: "my_database.* : ALL"
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}" 
-    login_host: "localhost"
-    plugin: mysql_native_password
-
