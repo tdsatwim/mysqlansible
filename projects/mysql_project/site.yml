@@ -3,3 +3,15 @@
   become: yes
   roles:
     - mysql
+
+- name: Secure MySQL
+  hosts: mysql_servers
+  become: yes
+  roles:
+    - secure
+
+- name: Setup MySQL backups
+  hosts: backup
+  become: yes
+  roles:
+    - backup
