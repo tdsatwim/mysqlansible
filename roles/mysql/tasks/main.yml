@@ -1,6 +1,0 @@
-#- include_tasks: install.yml
-- include_tasks: start.yml
-#- include_tasks: configure.yml
-#- include_tasks: initialize.yml
-- include_tasks: create_user_db.yml
-- include_tasks: secure.yml
