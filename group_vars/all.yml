@@ -1,5 +1,5 @@
-mysql_root_password: "Welcome$24"         # Desired final root password
-mysql_strong_password: "Welcome$24"  # Interim strong password (for initial reset)
+mysql_root_password: "G8@xwY$7pQmZ!"         # Desired final root password
+mysql_strong_password: "G8@xwY$7pQmZ!"  # Interim strong password (for initial reset)
 mysql_db_name: "my_database"
 mysql_user: "myuser"
 mysql_user_password: "Welcome$24"
