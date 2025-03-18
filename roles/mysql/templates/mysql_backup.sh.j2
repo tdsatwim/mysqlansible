@@ -1,2 +1,0 @@
-#!/bin/bash
-mysqldump -u root -p'{{ mysql_root_password }}' {{ mysql_db_name }} > {{ mysql_backup_dir }}/{{ mysql_db_name }}_$(date +\%F).sql
