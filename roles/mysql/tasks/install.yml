@@ -1,6 +1,11 @@
-- name: Enable MySQL 8.4 module on RHEL 9
+- name: Add MySQL 8.4 Community Repository
+  ansible.builtin.dnf:
+    name: "https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm"
+    state: present
+
+- name: Enable MySQL Community repository
   ansible.builtin.command:
-    cmd: dnf module enable -y mysql:8.4
+    cmd: dnf config-manager --set-enabled mysql80-community
 
 - name: Install MySQL 8.4 server
   ansible.builtin.dnf:
