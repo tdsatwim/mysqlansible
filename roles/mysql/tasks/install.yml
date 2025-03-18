@@ -4,13 +4,11 @@
     url: https://dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm
     dest: /tmp/mysql-repo.rpm
   mode: '0644'
-  when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Install MySQL Yum Repository package
   yum:
     name: /tmp/mysql-repo.rpm
     state: present
-  when: ansible_facts['os_family'] == 'RedHat'
 
 # Ensure MySQL 8.4 repository is enabled (and MySQL 8.0 is disabled, if present)
 - name: Disable MySQL 8.0 repository (if present)
