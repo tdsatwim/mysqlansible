@@ -1,26 +1,25 @@
-- name: Download MySQL 8.4 Community Repository Manually
+- name: Download MySQL 8.4 Community Repository RPM
   get_url:
-    url: https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
-    dest: /tmp/mysql80-community-release.rpm
+    url: https://dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm
+    dest: /tmp/mysql84-community-release.rpm
     mode: '0644'
 
 - name: Install MySQL 8.4 Community Repository
-  ansible.builtin.dnf:
-    name: /tmp/mysql80-community-release.rpm
+  dnf:
+    name: /tmp/mysql84-community-release.rpm
     state: present
     disable_gpg_check: yes
 
-- name: Enable MySQL Community repository
-  ansible.builtin.command:
-    cmd: dnf config-manager --set-enabled mysql80-community
+- name: Enable MySQL 8.4 Community Repository
+  command: dnf config-manager --set-enabled mysql84-community
 
-- name: Install MySQL 8.4 server
-  ansible.builtin.dnf:
+- name: Install MySQL 8.4 Server
+  dnf:
     name: mysql-server
     state: present
 
-- name: Enable and start MySQL service
-  ansible.builtin.service:
+- name: Enable and Start MySQL Service
+  service:
     name: mysqld
     enabled: yes
     state: started
