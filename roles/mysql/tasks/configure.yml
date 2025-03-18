@@ -4,12 +4,5 @@
     state: present
   when: ansible_facts['os_family'] == 'RedHat'
 
-- name: Allow MySQL to manage its data on SELinux (set file context)
-  command: semanage fcontext -a -t mysqld_db_t "{{ mysql_data_dir }}(/.*)?"
-  args:
-    warn: false
-  register: semanage_result
-  failed_when: semanage_result.rc not in [0,1]  # 0 = added, 1 = already exists
-
 - name: Restore SELinux context on MySQL data directory
   command: restorecon -R "{{ mysql_data_dir }}"
