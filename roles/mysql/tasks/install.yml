@@ -1,9 +1,3 @@
-- name: Ensure MySQL Repo RPM is in place
-  ansible.builtin.copy:
-    src: /tmp/mysql84-community-release-el9-1.noarch.rpm  # Use the locally copied file
-    dest: /tmp/mysql84-community-release-el9-1.noarch.rpm
-    mode: '0644'
-
 - name: Install MySQL Yum Repository package
   ansible.builtin.dnf:
     name: /tmp/mysql84-community-release-el9-1.noarch.rpm
