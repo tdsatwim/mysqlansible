@@ -1,29 +1,26 @@
-# Add MySQL Yum repository (for MySQL 8.4)
 - name: Download MySQL Community Release RPM (8.4 for EL9)
-  get_url:
+  ansible.builtin.get_url:
     url: https://dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm
     dest: /tmp/mysql-repo.rpm
-  mode: '0644'
+    mode: '0644'
 
 - name: Install MySQL Yum Repository package
-  yum:
+  ansible.builtin.dnf:
     name: /tmp/mysql-repo.rpm
     state: present
+    disable_gpg_check: yes
 
-# Ensure MySQL 8.4 repository is enabled (and MySQL 8.0 is disabled, if present)
-- name: Disable MySQL 8.0 repository (if present)
-  command: dnf config-manager --disable mysql80-community
-  register: disable_mysql80
-  changed_when: disable_mysql80.rc == 0
-
-- name: Enable MySQL 8.4 repositories
-  command: dnf config-manager --set-enabled mysql-8.4-lts-community mysql-tools-8.4-lts-community
-  register: enable_mysql84
-  changed_when: enable_mysql84.rc == 0
+- name: Enable MySQL 8.4 repository
+  ansible.builtin.command: dnf config-manager --set-enabled mysql-8.4-lts-community
+  changed_when: false
 
 - name: Install MySQL 8.4 Server
-  dnf:
+  ansible.builtin.dnf:
     name: mysql-server
     state: present
-  notify: Restart MySQL
 
+- name: Start and enable MySQL service
+  ansible.builtin.systemd:
+    name: mysqld
+    state: started
+    enabled: yes
