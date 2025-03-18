@@ -1,11 +1,8 @@
-- name: Install MySQL 8.4 Community Repository
-  dnf:
-    name: /tmp/mysql84-community-release.rpm
-    state: present
-    disable_gpg_check: yes
+- name: Disable MySQL 8.0 repository
+  command: dnf config-manager --disable mysql80-community
 
-- name: Enable MySQL Community repository
-  command: dnf config-manager --set-enabled mysql84-community
+- name: Enable MySQL 8.4 repositories
+  command: dnf config-manager --set-enabled mysql-8.4-lts-community mysql-tools-8.4-lts-community
 
 - name: Install MySQL 8.4 Server
   dnf:
