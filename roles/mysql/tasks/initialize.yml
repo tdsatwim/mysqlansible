@@ -2,3 +2,18 @@
   command: mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql
   args:
     creates: /var/lib/mysql/mysql
+    
+- name: Get MySQL temporary root password
+  shell: "grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'"
+  register: mysql_temp_password
+  changed_when: false
+
+- name: Change MySQL root password
+  community.mysql.mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_root_password }}"
+    login_user: root
+    login_password: "{{ mysql_temp_password.stdout }}"
+    check_implicit_admin: yes
+    state: present
