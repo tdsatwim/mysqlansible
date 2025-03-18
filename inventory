@@ -1,8 +1,8 @@
 [mysql_servers]
-ssrv3006 ansible_host=192.168.1.16
+dbserver ansible_host=192.168.1.16
 
 [backup]
-ssrv3007 ansible_host=10.168.0.23
+backupserver ansible_host=10.168.0.23
 
 [all:vars]
 ansible_user=ansible_user
