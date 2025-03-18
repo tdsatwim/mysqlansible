@@ -10,7 +10,6 @@
     state: present
     disable_gpg_check: yes
 
-
 - name: Enable MySQL 8.4 repository
   ansible.builtin.command: dnf config-manager --set-enabled mysql-8.4-lts-community
   changed_when: false
