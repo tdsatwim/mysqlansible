@@ -1,16 +1,10 @@
-- name: Download MySQL 8.4 Community Repository RPM
-  get_url:
-    url: https://dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm
-    dest: /tmp/mysql84-community-release.rpm
-    mode: '0644'
-
 - name: Install MySQL 8.4 Community Repository
   dnf:
     name: /tmp/mysql84-community-release.rpm
     state: present
     disable_gpg_check: yes
 
-- name: Enable MySQL 8.4 Community Repository
+- name: Enable MySQL Community repository
   command: dnf config-manager --set-enabled mysql84-community
 
 - name: Install MySQL 8.4 Server
