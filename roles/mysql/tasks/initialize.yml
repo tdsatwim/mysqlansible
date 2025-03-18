@@ -24,11 +24,10 @@
 - name: Create MySQL root config file (/root/.my.cnf)
   copy:
     dest: /root/.my.cnf
-    owner: root
-    group: root
-    mode: '0600'
     content: |
       [client]
       user=root
       password={{ mysql_root_password }}
-      host=localhost
+    mode: '0600'
+  register: mysql_root_cnf
+
