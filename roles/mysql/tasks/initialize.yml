@@ -8,8 +8,18 @@
   register: mysql_temp_password
   changed_when: false
 
+- name: Relax password policy
+  shell: |
+    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
+      SET GLOBAL validate_password.policy=LOW;
+      SET GLOBAL validate_password.length=6;
+    "
+  register: relax_policy
+
 - name: Change MySQL root password (Handle Expired Password)
   shell: |
-    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
+      ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';
+    "
   register: mysql_password_reset
   changed_when: mysql_password_reset.rc == 0
