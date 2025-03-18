@@ -1,11 +1,11 @@
-- name: Create MySQL database
+- name: Create application database
   community.mysql.mysql_db:
     name: "{{ mysql_db_name }}"
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
 
-- name: Create MySQL user
+- name: Create application database user
   community.mysql.mysql_user:
     name: "{{ mysql_user }}"
     password: "{{ mysql_user_password }}"
