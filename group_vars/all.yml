@@ -1,8 +1,8 @@
 mysql_root_password: "Welcome$24"         # Desired final root password
-mysql_strong_password: "4e8OELP.Ap0pbttsidl!!"  # Interim strong password (for initial reset)
+mysql_strong_password: "Welcome$24"  # Interim strong password (for initial reset)
 mysql_db_name: "my_database"
 mysql_user: "myuser"
-mysql_user_password: "mypassword"
+mysql_user_password: "Welcome$24"
 mysql_host: "%"                           # Allow myuser from any host
 mysql_backup_dir: "/var/backups/mysql"
 mysql_data_dir: "/var/lib/mysql"
