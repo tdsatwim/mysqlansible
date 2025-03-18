@@ -1,11 +1,11 @@
-mysql_root_password: "Welcome$24"
-mysql_strong_password: "4e8OELP.Ap0pbttsidl!!"
+mysql_root_password: "Welcome$24"         # Desired final root password
+mysql_strong_password: "4e8OELP.Ap0pbttsidl!!"  # Interim strong password (for initial reset)
 mysql_db_name: "my_database"
 mysql_user: "myuser"
 mysql_user_password: "mypassword"
-mysql_host: "%"
+mysql_host: "%"                           # Allow myuser from any host
 mysql_backup_dir: "/var/backups/mysql"
 mysql_data_dir: "/var/lib/mysql"
 mysql_config_file: "/etc/my.cnf"
-mysql_rpm_bundle: "/tmp/mysql-9.1.0-1.el9.x86_64.rpm-bundle.tar"
+mysql_rpm_bundle: "/tmp/mysql-9.1.0-1.el9.x86_64.rpm-bundle.tar"  # (Optional offline installer)
 mysql_temp_password_file: "/var/log/mysqld.log"
