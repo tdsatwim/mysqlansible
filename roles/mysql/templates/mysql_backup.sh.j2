@@ -1,0 +1,4 @@
+#!/bin/bash
+DUMP_FILE="{{ mysql_backup_dir }}/{{ mysql_db_name }}_$(date +\%F).sql"
+mysqldump -u root -p'{{ mysql_root_password }}' {{ mysql_db_name }} > "$DUMP_FILE"
+tar -czf "${DUMP_FILE}.tar.gz" -C "{{ mysql_backup_dir }}" "$(basename $DUMP_FILE)" && rm -f "$DUMP_FILE"

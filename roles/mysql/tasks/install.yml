@@ -1,0 +1,15 @@
+- name: Ensure MySQL repository is added
+  ansible.builtin.dnf:
+    name: "https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm"
+    state: present
+
+- name: Install MySQL server
+  ansible.builtin.dnf:
+    name: mysql-community-server
+    state: present
+
+- name: Enable and start MySQL service
+  ansible.builtin.service:
+    name: mysqld
+    enabled: yes
+    state: started

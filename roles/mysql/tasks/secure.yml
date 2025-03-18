@@ -1,0 +1,23 @@
+- name: Remove test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Remove anonymous users
+  community.mysql.mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Ensure root can only connect locally
+  community.mysql.mysql_user:
+    name: root
+    host: "{{ ansible_hostname }}"
+    password: "{{ mysql_root_password }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"

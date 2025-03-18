@@ -1,0 +1,7 @@
+- name: Allow MySQL to manage its data on SELinux
+  command: semanage fcontext -a -t mysqld_db_t "/var/lib/mysql(/.*)?"
+  ignore_errors: yes
+
+- name: Restore SELinux context on MySQL data directory
+  command: restorecon -R /var/lib/mysql
+  ignore_errors: yes
