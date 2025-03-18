@@ -8,12 +8,8 @@
   register: mysql_temp_password
   changed_when: false
 
-- name: Change MySQL root password
-  community.mysql.mysql_user:
-    name: root
-    host: localhost
-    password: "{{ mysql_root_password }}"
-    login_user: root
-    login_password: "{{ mysql_temp_password.stdout }}"
-    check_implicit_admin: yes
-    state: present
+- name: Change MySQL root password (Handle Expired Password)
+  shell: |
+    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  register: mysql_password_reset
+  changed_when: mysql_password_reset.rc == 0
