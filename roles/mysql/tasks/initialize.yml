@@ -12,8 +12,7 @@
       -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_strong_password }}';"
   register: set_strong_password
   changed_when: set_strong_password.rc == 0
-  no_log: true
-
+  
 - name: Set final root password (if different from strong password)
   shell: |
     mysql -u root -p'{{ mysql_strong_password }}' \
