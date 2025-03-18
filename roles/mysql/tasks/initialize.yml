@@ -4,14 +4,13 @@
   changed_when: false
   failed_when: mysql_temp_password.rc != 0 or mysql_temp_password.stdout | length == 0
 
-- name: Set initial strong root password (bypass password policy)
+- name: Set initial root password (handle expired password first)
   shell: |
     mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
-      UNINSTALL PLUGIN validate_password;
       ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
-  register: root_password_result
-  changed_when: root_password_result.rc == 0
-  failed_when: root_password_result.rc != 0
+  register: password_reset_result
+  changed_when: password_reset_result.rc == 0
+  failed_when: password_reset_result.rc != 0
   
 - name: Set final root password (if different from strong password)
   shell: |
