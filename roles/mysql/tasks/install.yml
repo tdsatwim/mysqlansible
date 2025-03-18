@@ -1,7 +1,7 @@
-- name: Ensure MySQL 8.4 repository is enabled
-  ansible.builtin.dnf:
-    name: mysql-8.4-community-release
-    state: present
+- name: Enable MySQL 8.4 module on RHEL 9
+  command: dnf module enable -y mysql:8.4
+  args:
+    warn: false
 
 - name: Install MySQL 8.4 server
   ansible.builtin.dnf:
