@@ -1,4 +1,5 @@
 mysql_root_password: "Welcome$24"
+mysql_strong_password: "4e8OELP.Ap0pbttsidl!!"
 mysql_db_name: "my_database"
 mysql_user: "myuser"
 mysql_user_password: "mypassword"
