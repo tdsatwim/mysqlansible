@@ -8,18 +8,30 @@
   register: mysql_temp_password
   changed_when: false
 
-- name: Relax password policy
-  shell: |
-    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
-      SET GLOBAL validate_password.policy=LOW;
-      SET GLOBAL validate_password.length=6;
-    "
-  register: relax_policy
+# STEP 1: Reset expired password with a STRONG password
+- name: Set initial strong root password
+  shell: >
+    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}'
+    -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_strong_password }}';"
+  register: set_strong_password
+  changed_when: set_strong_password.rc == 0
 
-- name: Change MySQL root password (Handle Expired Password)
-  shell: |
-    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
-      ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';
-    "
-  register: mysql_password_reset
-  changed_when: mysql_password_reset.rc == 0
+# STEP 2a: OPTIONAL - Relax policy or disable plugin, now that MySQL won't block us
+- name: Relax password policy
+  shell: >
+    mysql -u root -p'{{ mysql_strong_password }}'
+    -e "SET GLOBAL validate_password.policy=LOW;
+        SET GLOBAL validate_password.length=6;"
+  when: relax_password_policy | default(false)
+  register: relax_policy
+  changed_when: relax_policy.rc == 0
+
+# STEP 2b: OPTIONAL - If you want to set a weaker final password
+- name: Set final root password
+  shell: >
+    mysql -u root -p'{{ mysql_strong_password }}'
+    -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  when: final_password | default(false)
+  register: final_pass
+  changed_when: final_pass.rc == 0
+
