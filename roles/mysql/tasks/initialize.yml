@@ -1,49 +1,36 @@
-- name: Get MySQL temporary root password
-  shell: "grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'"
+- name: Get temporary MySQL root password from log
+  shell: |
+    grep 'temporary password' "{{ mysql_temp_password_file }}" | awk '{print $NF}' | tail -1
   register: mysql_temp_password
   changed_when: false
+  failed_when: mysql_temp_password.rc != 0
+  no_log: true   # hide the sensitive password in output
 
-- name: Set initial strong root password (to handle expired password)
-  shell: >
-    mysql --connect-expired-password
-    -u root
-    -p'{{ mysql_temp_password.stdout }}'
-    -e "ALTER USER 'root'@'localhost'
-        IDENTIFIED BY '{{ mysql_strong_password }}';"
+- name: Set initial strong root password (handle expired password)
+  shell: |
+    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' \
+      -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_strong_password }}';"
   register: set_strong_password
   changed_when: set_strong_password.rc == 0
+  no_log: true
 
-# OPTIONAL: Relax password policy if you want a weaker final password
-- name: Relax password policy
-  shell: >
-    mysql -u root
-    -p'{{ mysql_strong_password }}'
-    -e "SET GLOBAL validate_password.policy=LOW;
-        SET GLOBAL validate_password.length=6;"
-  when: false  # Set to true if you want to relax policy
-  register: relax_policy
-  changed_when: relax_policy.rc == 0
+- name: Set final root password (if different from strong password)
+  shell: |
+    mysql -u root -p'{{ mysql_strong_password }}' \
+      -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  register: set_final_password
+  changed_when: set_final_password.rc == 0
+  when: "{{ mysql_root_password != mysql_strong_password }}"
+  no_log: true
 
-# OPTIONAL: If you want a final root password different from the strong one
-- name: Set final root password
-  shell: >
-    mysql -u root
-    -p'{{ mysql_strong_password }}'
-    -e "ALTER USER 'root'@'localhost'
-        IDENTIFIED BY '{{ mysql_root_password }}';"
-  when: false  # Set to true if you want a different final pass
-  register: final_pass
-  changed_when: final_pass.rc == 0
-
-# Ensure `/root/.my.cnf` exists so MySQL tasks don't need explicit login credentials
-- name: Create MySQL root config file
+- name: Create MySQL root config file (/root/.my.cnf)
   copy:
     dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: '0600'
     content: |
       [client]
       user=root
-      password={{ mysql_root_password | default(mysql_strong_password) }}
+      password={{ mysql_root_password }}
       host=localhost
-    mode: '0600'
-    owner: root
-    group: root
