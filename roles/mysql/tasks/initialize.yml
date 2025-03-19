@@ -11,16 +11,7 @@
   register: password_reset_result
   changed_when: password_reset_result.rc == 0
   failed_when: password_reset_result.rc != 0
-
-- name: Set final root password (if different from strong password)
-  shell: |
-    mysql -u root -p'{{ mysql_strong_password }}' \
-      -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
-  register: set_final_password
-  changed_when: set_final_password.rc == 0
-  when: mysql_root_password != mysql_strong_password
-  no_log: true
-
+  
 - name: Create MySQL root config file (/root/.my.cnf)
   copy:
     dest: /root/.my.cnf
