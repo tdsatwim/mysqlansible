@@ -1,17 +1,33 @@
+- name: Initialize MySQL data directory
+  shell: mysql_install_db --user=mysql --datadir=/var/lib/mysql
+  args:
+    creates: /var/lib/mysql/mysql
+  register: mysql_init_result
+  changed_when: mysql_init_result.rc == 0
+  failed_when: mysql_init_result.rc != 0
+
+- name: Start MySQL service
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
 - name: Get MySQL temporary root password
-  shell: "grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}' | tail -1"
+  shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
   register: mysql_temp_password
   changed_when: false
-  failed_when: mysql_temp_password.rc != 0 or mysql_temp_password.stdout | length == 0
 
-- name: Set initial root password (handle expired password first)
+- name: Ensure MySQL root user uses password authentication
   shell: |
     mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
-      ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
-  register: password_reset_result
-  changed_when: password_reset_result.rc == 0
-  failed_when: password_reset_result.rc != 0
-  
+      ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '{{ mysql_root_password }}';
+      ALTER USER 'root'@'localhost' ACCOUNT UNLOCK;
+      ALTER USER 'root'@'localhost' PASSWORD EXPIRE NEVER;
+      FLUSH PRIVILEGES;"
+  register: mysql_root_fix
+  changed_when: mysql_root_fix.rc == 0
+  failed_when: mysql_root_fix.rc != 0
+
 - name: Create MySQL root config file (/root/.my.cnf)
   copy:
     dest: /root/.my.cnf
@@ -22,3 +38,9 @@
     mode: '0600'
   register: mysql_root_cnf
 
+- name: Ensure MySQL can bind to localhost
+  lineinfile:
+    path: /etc/my.cnf
+    line: "bind-address = 127.0.0.1"
+    insertafter: "[mysqld]"
+  notify: Restart MySQL
