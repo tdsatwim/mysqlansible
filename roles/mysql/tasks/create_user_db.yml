@@ -1,16 +1,24 @@
-- name: Create application database
-  community.mysql.mysql_db:
-    name: "{{ mysql_db_name }}"
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
+- name: Create application database and user
+  hosts: dbserver
+  become: yes
+  tasks:
 
-- name: Create application database user
-  community.mysql.mysql_user:
-    name: "{{ mysql_user }}"
-    password: "{{ mysql_user_password }}"
-    priv: "{{ mysql_db_name }}.*:ALL"
-    host: "{{ mysql_host }}"
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
+    - name: Ensure MySQL root config file exists (/root/.my.cnf)
+      stat:
+        path: /root/.my.cnf
+      register: mysql_root_cnf
+
+    - name: Create application database
+      mysql_db:
+        name: "{{ mysql_app_db }}"
+        state: present
+      when: mysql_root_cnf.stat.exists
+
+    - name: Create MySQL user for application
+      mysql_user:
+        name: "{{ mysql_app_user }}"
+        password: "{{ mysql_app_password }}"
+        priv: "{{ mysql_app_db }}.*:ALL"
+        host: "%"
+        state: present
+      when: mysql_root_cnf.stat.exists
