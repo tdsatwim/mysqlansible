@@ -4,7 +4,7 @@
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
-    login_host: localhost
+    login_unix_socket: /var/lib/mysql/mysql.sock
 
 - name: Create application database user
   community.mysql.mysql_user:
