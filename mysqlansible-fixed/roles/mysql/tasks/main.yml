@@ -1,8 +1,0 @@
-- name: Include installation tasks
-  include_tasks: install.yml
-
-- name: Initialize MySQL
-  include_tasks: initialize.yml
-
-- name: Create database and user
-  include_tasks: create_user_db.yml
