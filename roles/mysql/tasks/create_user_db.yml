@@ -12,7 +12,8 @@
     password: "{{ mysql_user_password }}"
     priv: "{{ mysql_db_name }}.*:ALL"
     host: "{{ mysql_host }}"
+    plugin: caching_sha2_password
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
-    login_host: localhost
+
