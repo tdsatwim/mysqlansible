@@ -1,0 +1,5 @@
+- name: Install and configure MySQL
+  hosts: dbserver
+  become: true
+  roles:
+    - mysql

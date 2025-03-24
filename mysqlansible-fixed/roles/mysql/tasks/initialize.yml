@@ -1,0 +1,23 @@
+- name: Get MySQL temporary root password
+  shell: grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}' | tail -1
+  register: mysql_temp_password
+  changed_when: false
+  failed_when: mysql_temp_password.rc != 0 or mysql_temp_password.stdout | length == 0
+
+- name: Set initial root password (handle expired password first)
+  shell: |
+    mysql --connect-expired-password -u root -p'{{ mysql_temp_password.stdout }}' -e "
+      ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  register: password_reset_result
+  changed_when: password_reset_result.rc == 0
+  failed_when: password_reset_result.rc != 0
+  no_log: true
+
+- name: Create MySQL root config file (/root/.my.cnf)
+  copy:
+    dest: /root/.my.cnf
+    content: |
+      [client]
+      user=root
+      password={{ mysql_root_password }}
+    mode: '0600'

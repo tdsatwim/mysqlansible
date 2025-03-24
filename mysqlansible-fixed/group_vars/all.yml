@@ -1,0 +1,5 @@
+mysql_root_password: "MyS3cureP@ssw0rd!"
+mysql_user: "appuser"
+mysql_user_password: "AppUs3rP@ss123"
+mysql_db_name: "appdb"
+mysql_host: "%"
