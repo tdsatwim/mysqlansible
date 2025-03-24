@@ -22,3 +22,13 @@
     var: password_reset_result
   when: password_reset_result is defined
 
+- name: Set default MySQL authentication plugin to mysql_native_password
+  copy:
+    dest: /etc/my.cnf.d/auth.cnf
+    content: |
+      [mysqld]
+      default_authentication_plugin = mysql_native_password
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart MySQL
