@@ -24,12 +24,12 @@
 
 - name: Create MySQL config file for ansible_user
   copy:
-    dest: "/home/ansible_user/.my.cnf"
+    dest: "/root/.my.cnf"
     content: |
       [client]
       user=root
       password={{ mysql_root_password }}
       socket=/var/lib/mysql/mysql.sock
-    owner: ansible_user
-    group: ansible_user
+    owner: root
+    group: root
     mode: '0600'
