@@ -1,7 +1,7 @@
-mysql_root_password: "G8@xwY$7pQmZ!"         # Desired final root password
+mysql_root_password: "Ap0pbttsidl!!"         # Desired final root password
 mysql_db_name: "my_database"
 mysql_user: "myuser"
-mysql_user_password: "G8@xwY$7pQmZ!"
+mysql_user_password: "Ap0pbttsidl!!"
 mysql_host: "%"                           # Allow myuser from any host
 mysql_backup_dir: "/var/backups/mysql"
 mysql_data_dir: "/var/lib/mysql"
