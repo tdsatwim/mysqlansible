@@ -32,14 +32,3 @@
     login_password: "{{ mysql_root_password }}"
     login_unix_socket: /var/lib/mysql/mysql.sock
     
-- name: Create MySQL config file for ansible_user
-  copy:
-    dest: "/root/.my.cnf"
-    content: |
-      [client]
-      user=root
-      password={{ mysql_root_password }}
-      socket=/var/lib/mysql/mysql.sock
-    owner: root
-    group: root
-    mode: '0600'
