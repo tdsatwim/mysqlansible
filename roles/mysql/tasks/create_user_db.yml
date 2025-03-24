@@ -2,7 +2,9 @@
   community.mysql.mysql_db:
     name: "{{ mysql_db_name }}"
     state: present
-    login_config_file: /home/ansible_user/.my.cnf
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_host: localhost
 
 - name: Create application database user
   community.mysql.mysql_user:
@@ -11,4 +13,6 @@
     priv: "{{ mysql_db_name }}.*:ALL"
     host: "{{ mysql_host }}"
     state: present
-    login_config_file: /home/ansible_user/.my.cnf
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_host: localhost
