@@ -2,7 +2,10 @@
   community.mysql.mysql_db:
     name: "{{ mysql_db_name }}"
     state: present
-    login_config_file: /home/ansible_user/.my.cnf
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  register: create_db_result
 
 - name: Create application database user
   community.mysql.mysql_user:
