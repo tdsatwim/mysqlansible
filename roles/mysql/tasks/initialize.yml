@@ -13,15 +13,16 @@
   failed_when: password_reset_result.rc != 0
   no_log: true
   
-- name: Create MySQL root config file (/root/.my.cnf)
+- name: Create MySQL config for ansible_user
   copy:
-    dest: /root/.my.cnf
+    dest: "/home/ansible_user/.my.cnf"
     content: |
       [client]
       user=root
       password={{ mysql_root_password }}
     mode: '0600'
-  register: mysql_root_cnf
+    owner: ansible_user
+    group: ansible_user
 
   - name: Set final root password (if different from strong password)
   shell: |
