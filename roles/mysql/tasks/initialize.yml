@@ -1,8 +1,13 @@
+---
 - name: Get MySQL temporary root password
   shell: grep "temporary password" /var/log/mysqld.log | awk '{print $NF}' | tail -1
   register: mysql_temp_password
   changed_when: false
   failed_when: mysql_temp_password.rc != 0 or mysql_temp_password.stdout | length == 0
+
+- name: Debug temporary password
+  debug:
+    msg: "MySQL temporary password: {{ mysql_temp_password.stdout }}"
 
 - name: Set initial root password (handle expired password first)
   shell: |
@@ -12,7 +17,12 @@
   changed_when: password_reset_result.rc == 0
   failed_when: password_reset_result.rc != 0
   no_log: true
-  
+
+- name: Debug password reset result
+  debug:
+    var: password_reset_result
+  when: password_reset_result is defined
+
 - name: Create MySQL config for ansible_user
   copy:
     dest: "/home/ansible_user/.my.cnf"
@@ -32,6 +42,3 @@
   changed_when: set_final_password.rc == 0
   when: mysql_root_password != mysql_strong_password
   no_log: true
-
-
-
