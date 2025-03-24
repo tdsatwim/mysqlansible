@@ -22,16 +22,17 @@
     var: password_reset_result
   when: password_reset_result is defined
 
-- name: Create MySQL config for ansible_user
+- name: Create MySQL config file for ansible_user
   copy:
     dest: "/home/ansible_user/.my.cnf"
     content: |
       [client]
       user=root
       password={{ mysql_root_password }}
-    mode: '0600'
+      socket=/var/lib/mysql/mysql.sock
     owner: ansible_user
     group: ansible_user
+    mode: '0600'
 
 - name: Set final root password (if different from strong password)
   shell: |
