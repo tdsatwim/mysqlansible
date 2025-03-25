@@ -10,8 +10,20 @@
   community.mysql.mysql_query:
     login_user: root
     login_password: "{{ mysql_root_password }}"
-    query: |
+    query: >
       CREATE USER IF NOT EXISTS '{{ mysql_user }}'@'{{ mysql_host }}'
-      IDENTIFIED WITH caching_sha2_password BY '{{ mysql_user_password }}';
-      GRANT ALL PRIVILEGES ON `{{ mysql_db_name }}`.* TO '{{ mysql_user }}'@'{{ mysql_host }}';
-      FLUSH PRIVILEGES;
+      IDENTIFIED WITH caching_sha2_password BY '{{ mysql_user_password }}'
+
+- name: Grant privileges to DB user
+  community.mysql.mysql_query:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    query: >
+      GRANT ALL PRIVILEGES ON `{{ mysql_db_name }}`.* TO '{{ mysql_user }}'@'{{ mysql_host }}'
+
+- name: Flush privileges
+  community.mysql.mysql_query:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    query: "FLUSH PRIVILEGES"
+
