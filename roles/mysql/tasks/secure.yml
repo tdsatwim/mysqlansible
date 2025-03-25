@@ -13,12 +13,15 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
 
-- name: Restrict root user to localhost
-  community.mysql.mysql_user:
-    name: root
-    host: localhost
-    password: "{{ mysql_root_password }}"
-    plugin: caching_sha2_password
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
+- name: Restrict root access to localhost (SQL fallback)
+  shell: |
+    mysql -u root -p'{{ mysql_root_password }}' -e "
+      UPDATE mysql.user
+      SET host = 'localhost'
+      WHERE user = 'root';
+      FLUSH PRIVILEGES;"
+  args:
+    executable: /bin/bash
+  register: restrict_root_result
+  changed_when: "'Rows matched' in restrict_root_result.stdout or restrict_root_result.rc == 0"
+  failed_when: restrict_root_result.rc != 0
