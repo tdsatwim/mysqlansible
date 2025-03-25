@@ -22,16 +22,6 @@
     var: password_reset_result
   when: password_reset_result is defined
 
-- name: Ensure MySQL is configured to use mysql_native_password
-  copy:
-    dest: /etc/my.cnf.d/auth.cnf
-    content: |
-      [mysqld]
-      default_authentication_plugin=mysql_native_password
-    owner: root
-    group: root
-    mode: '0644'
-
 - name: Restart MySQL to apply authentication plugin setting
   service:
     name: mysqld
