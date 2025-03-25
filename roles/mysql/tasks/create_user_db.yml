@@ -6,12 +6,12 @@
     login_password: "{{ mysql_root_password }}"
     login_unix_socket: /var/lib/mysql/mysql.sock
 
-- name: create DB user with SHA2 plugin
+- name: Create DB user with SHA2 plugin
   community.mysql.mysql_query:
     login_user: root
     login_password: "{{ mysql_root_password }}"
     query: |
       CREATE USER IF NOT EXISTS '{{ mysql_user }}'@'{{ mysql_host }}'
-      IDENTIFIED WITH 'caching_sha2_password' BY '{{ mysql_user_password }}';
-      GRANT ALL PRIVILEGES ON {{ mysql_db_name }}.* TO '{{ mysql_user }}'@'{{ mysql_host }}';
+      IDENTIFIED WITH caching_sha2_password BY '{{ mysql_user_password }}';
+      GRANT ALL PRIVILEGES ON `{{ mysql_db_name }}`.* TO '{{ mysql_user }}'@'{{ mysql_host }}';
       FLUSH PRIVILEGES;
