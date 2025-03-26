@@ -1,0 +1,12 @@
+[mysql_servers]
+dbserver ansible_host=192.168.1.16
+
+[backup]
+backupserver ansible_host=10.168.0.23
+
+[all:vars]
+ansible_user=ansible_user
+ansible_ssh_private_key_file=/home/ansible_user/.ssh/id_rsa
+ansible_become=yes
+ansible_become_method=sudo
+ansible_become_password="Welcome$24"

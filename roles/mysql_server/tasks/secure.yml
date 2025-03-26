@@ -1,0 +1,27 @@
+- name: Remove test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Remove anonymous MySQL users
+  community.mysql.mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Restrict root access to localhost (SQL fallback)
+  shell: |
+    mysql -u root -p'{{ mysql_root_password }}' -e "
+      UPDATE mysql.user
+      SET host = 'localhost'
+      WHERE user = 'root';
+      FLUSH PRIVILEGES;"
+  args:
+    executable: /bin/bash
+  register: restrict_root_result
+  changed_when: "'Rows matched' in restrict_root_result.stdout or restrict_root_result.rc == 0"
+  failed_when: restrict_root_result.rc != 0

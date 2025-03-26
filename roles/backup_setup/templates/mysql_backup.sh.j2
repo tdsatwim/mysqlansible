@@ -1,0 +1,14 @@
+#!/bin/bash
+DATE=$(date +%F)
+DB_NAME="my_database"
+BACKUP_DIR="/opt/mysql_backups"
+
+# Open tunnel (will auto-close at end of session)
+ssh -L 3307:localhost:3306 ansible_user@{{ db_host }} -N -f
+
+# Dump database over the tunnel
+mysqldump -u root -p'{{ mysql_root_password }}' -h 127.0.0.1 -P 3307 $DB_NAME > $BACKUP_DIR/${DB_NAME}_$DATE.sql
+
+# Compress
+tar -czf $BACKUP_DIR/${DB_NAME}_$DATE.sql.tar.gz -C $BACKUP_DIR ${DB_NAME}_$DATE.sql
+rm $BACKUP_DIR/${DB_NAME}_$DATE.sql
