@@ -8,8 +8,8 @@
   file:
     path: "{{ mysql_backup_dir }}"
     state: directory
-    owner: root
-    group: root
+    owner: ansible_user
+    group: ansible_user
     mode: '0755'
 
 - name: Deploy MySQL backup script
@@ -21,7 +21,7 @@
 - name: Schedule cron job for MySQL backups
   cron:
     name: "MySQL Backup"
-    user: root
+    user: ansible_user
     minute: "0"
     hour: "2"
     job: "/usr/local/bin/mysql_backup.sh"
