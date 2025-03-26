@@ -4,13 +4,6 @@
   roles:
     - mysql
 
-- name: Install MySQL client on backupserver
-  hosts: backup
-  become: yes
-  roles:
-    - role: mysql
-      tasks_from: install_client.yml
-
 - name: Setup MySQL backups (Backup Server)
   hosts: backup
   become: yes
