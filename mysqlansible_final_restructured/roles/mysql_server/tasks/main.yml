@@ -1,0 +1,6 @@
+- import_tasks: install.yml
+- import_tasks: initialize.yml
+- import_tasks: create_user_db.yml
+- import_tasks: secure.yml
+- import_tasks: configure.yml
+- import_tasks: start.yml

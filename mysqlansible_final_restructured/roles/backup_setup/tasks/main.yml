@@ -1,0 +1,27 @@
+- name: Ensure MySQL client is installed on backup host
+  dnf:
+    name: mysql-community-client
+    state: present
+  when: ansible_facts['os_family'] == 'RedHat'
+
+- name: Ensure backup directory exists
+  file:
+    path: "{{ mysql_backup_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Deploy MySQL backup script
+  template:
+    src: mysql_backup.sh.j2
+    dest: /usr/local/bin/mysql_backup.sh
+    mode: '0755'
+
+- name: Schedule cron job for MySQL backups
+  cron:
+    name: "MySQL Backup"
+    user: root
+    minute: "0"
+    hour: "2"
+    job: "/usr/local/bin/mysql_backup.sh"

@@ -1,0 +1,5 @@
+[dbserver]
+db.example.com
+
+[backup]
+backup.example.com
