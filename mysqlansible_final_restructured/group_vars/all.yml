@@ -3,7 +3,7 @@ mysql_db_name: "my_database"
 mysql_user: "myuser"
 mysql_user_password: "Ap0pbttsidl!!"
 mysql_host: "%"                           # Allow myuser from any host
-mysql_backup_dir: "/var/backups/mysql"
+backup_directory: "/opt/mysql_backups"
 mysql_data_dir: "/var/lib/mysql"
 mysql_config_file: "/etc/my.cnf"
 mysql_rpm_bundle: "/tmp/mysql-9.1.0-1.el9.x86_64.rpm-bundle.tar" 
