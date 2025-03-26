@@ -13,9 +13,9 @@
     mode: '0755'
 
 - name: Deploy MySQL backup script
-  template:
+  ansible.builtin.template:
     src: mysql_backup.sh.j2
-    dest: /usr/local/bin/mysql_backup.sh
+    dest: /opt/mysql_backups/mysql_backup.sh
     mode: '0755'
 
 - name: Schedule cron job for MySQL backups
