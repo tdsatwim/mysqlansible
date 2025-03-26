@@ -1,8 +1,0 @@
-- name: Install SELinux management tools (semanage)
-  package:
-    name: policycoreutils-python-utils
-    state: present
-  when: ansible_facts['os_family'] == 'RedHat'
-
-- name: Restore SELinux context on MySQL data directory
-  command: restorecon -R "{{ mysql_data_dir }}"
